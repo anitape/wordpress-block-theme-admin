@@ -1,0 +1,15 @@
+# Ignore everything
+*
+
+# But not these:
+!.gitignore
+
+# Allow custom-tables in plugins folder and its content
+!plugins/
+!plugins/custom-tables/
+!plugins/custom-tables/**/*
+
+# Allow the specific theme folder and its content
+!themes/
+!themes/admin-block-theme/
+!themes/admin-block-theme/**/*
