@@ -19,31 +19,34 @@ export default function save({ attributes }) {
 	const { rows, textColor, borderColor, bgColor, fontSize, borderWidth } = attributes;
 
 	return (
-		<table
-			style={{
-				borderCollapse: 'collapse',
-				backgroundColor: bgColor,
-				fontSize: fontSize,
-				color: textColor
-			}}
+		<div
+			{...useBlockProps.save()}
 		>
-			<tbody>
-				{rows.map((row, rowIdx) => (
-					<tr key={rowIdx}>
-						{row.map((cell, colIdx) => (
-							<td
-								key={colIdx}
-								style={{
-									border: `${borderWidth}px solid ${borderColor}`,
-									padding: '8px',
-								}}
-							>
-								{cell}
-							</td>
-						))}
-					</tr>
-				))}
-			</tbody>
-		</table>
+			<table				
+				style={{
+					backgroundColor: bgColor,
+					fontSize: fontSize,
+					color: textColor
+				}}
+			>
+				<tbody>
+					{rows.map((row, rowIdx) => (
+						<tr key={rowIdx}>
+							{row.map((cell, colIdx) => (
+								<td
+									key={colIdx}
+									style={{
+										border: `${borderWidth}px solid ${borderColor}`,
+										width: `${100 / row.length}%`
+									}}
+								>
+									{cell}
+								</td>
+							))}
+						</tr>
+					))}
+				</tbody>
+			</table>
+		</div>
 	);
 }

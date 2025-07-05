@@ -20,9 +20,6 @@ return array(
 		),
 		'supports' => array(
 			'html' => true,
-			'color' => array(
-				
-			),
 			'spacing' => array(
 				'margin' => true,
 				'padding' => true
@@ -52,7 +49,7 @@ return array(
 			),
 			'bgColor' => array(
 				'type' => 'string',
-				'default' => '#000000'
+				'default' => '#12091a'
 			),
 			'fontSize' => array(
 				'type' => 'number',

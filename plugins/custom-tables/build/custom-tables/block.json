@@ -15,7 +15,6 @@
   "example": {},
   "supports": {
     "html": true,
-    "color": {},
     "spacing": {
       "margin": true,
       "padding": true
@@ -45,7 +44,7 @@
     },
     "bgColor": {
       "type": "string",
-      "default": "#000000"
+      "default": "#12091a"
     },
     "fontSize": {
       "type": "number",

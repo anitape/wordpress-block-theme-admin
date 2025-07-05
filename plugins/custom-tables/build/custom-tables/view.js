@@ -25,7 +25,7 @@
  */
 
 /* eslint-disable no-console */
-console.log('Hello World! (from create-block-custom-tables block)');
+//console.log( 'Hello World! (from create-block-custom-tables block)' );
 /* eslint-enable no-console */
 /******/ })()
 ;

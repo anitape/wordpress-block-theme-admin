@@ -8,7 +8,7 @@
   \**************************************/
 /***/ ((module) => {
 
-module.exports = /*#__PURE__*/JSON.parse('{"$schema":"https://schemas.wp.org/trunk/block.json","apiVersion":3,"name":"create-block/custom-tables","version":"0.1.0","title":"Custom Tables","category":"design","icon":"table-col-after","description":"A customizable table block with color, size, and border options.","keywords":["table","custom","design"],"example":{},"supports":{"html":true,"color":{},"spacing":{"margin":true,"padding":true}},"textdomain":"custom-tables","editorScript":"file:./index.js","editorStyle":"file:./index.css","style":"file:./style-index.css","viewScript":"file:./view.js","attributes":{"rows":{"type":"array","default":[["Cell"]]},"textColor":{"type":"string","default":"#ffffff"},"borderColor":{"type":"string","default":"#ffffff"},"bgColor":{"type":"string","default":"#000000"},"fontSize":{"type":"number","default":16},"borderWidth":{"type":"number","default":1}}}');
+module.exports = /*#__PURE__*/JSON.parse('{"$schema":"https://schemas.wp.org/trunk/block.json","apiVersion":3,"name":"create-block/custom-tables","version":"0.1.0","title":"Custom Tables","category":"design","icon":"table-col-after","description":"A customizable table block with color, size, and border options.","keywords":["table","custom","design"],"example":{},"supports":{"html":true,"spacing":{"margin":true,"padding":true}},"textdomain":"custom-tables","editorScript":"file:./index.js","editorStyle":"file:./index.css","style":"file:./style-index.css","viewScript":"file:./view.js","attributes":{"rows":{"type":"array","default":[["Cell"]]},"textColor":{"type":"string","default":"#ffffff"},"borderColor":{"type":"string","default":"#ffffff"},"bgColor":{"type":"string","default":"#12091a"},"fontSize":{"type":"number","default":16},"borderWidth":{"type":"number","default":1}}}');
 
 /***/ }),
 
@@ -97,10 +97,31 @@ function Edit({
 
   // Adds a new column to every row
   const addColumn = () => {
-    const newRows = rows.map(row => [...row, 'Cell']); // add a string to each row
-    setAttributes({
-      rows: newRows
-    });
+    if (rows[0]) {
+      const newRows = rows.map(row => [...row, 'Cell']); // add a string to each row
+      setAttributes({
+        rows: newRows
+      });
+    }
+  };
+
+  // Delete a row
+  const deleteRow = () => {
+    if (rows.length > 1) {
+      setAttributes({
+        rows: rows.slice(0, -1)
+      }); // removes last row
+    }
+  };
+
+  // Delete a column from every row
+  const deleteColumn = () => {
+    if (rows[0] && rows[0].length > 1) {
+      const updatedRows = rows.map(row => row.slice(0, -1)); // remove last cell from each row
+      setAttributes({
+        rows: updatedRows
+      });
+    }
   };
   return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.Fragment, {
     children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__.InspectorControls, {
@@ -159,36 +180,45 @@ function Edit({
           onClick: addColumn,
           variant: "secondary",
           children: "+ Add Column"
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.Button, {
+          onClick: deleteRow,
+          variant: "primary",
+          disabled: rows.length <= 1,
+          children: "- Delete Row"
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.Button, {
+          onClick: deleteColumn,
+          variant: "secondary",
+          disabled: rows[0]?.length <= 1,
+          children: "- Delete Column"
         })]
       })]
-    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("table", {
-      style: {
-        borderCollapse: 'collapse',
-        backgroundColor: bgColor,
-        fontSize: fontSize,
-        color: textColor
-      },
-      children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("tbody", {
-        children: rows.map((row, rowIdx) => /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("tr", {
-          children: row.map((cell, colIdx) => /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("td", {
-            style: {
-              border: `${borderWidth}px solid ${borderColor}`,
-              padding: '8px'
-            },
-            children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("input", {
-              value: cell,
-              placeholder: "Cell",
-              onChange: e => updateCell(rowIdx, colIdx, e.target.value),
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("div", {
+      ...(0,_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__.useBlockProps)(),
+      children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("table", {
+        style: {
+          backgroundColor: bgColor,
+          fontSize: fontSize,
+          color: textColor
+        },
+        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("tbody", {
+          children: rows.map((row, rowIdx) => /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("tr", {
+            children: row.map((cell, colIdx) => /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("td", {
               style: {
-                width: '100%',
-                fontSize: fontSize,
-                color: textColor,
-                border: 'none',
-                background: 'transparent'
-              }
-            })
-          }, colIdx))
-        }, rowIdx))
+                border: `${borderWidth}px solid ${borderColor}`,
+                width: `${100 / row.length}%`
+              },
+              children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("input", {
+                value: cell,
+                placeholder: "Cell",
+                onChange: e => updateCell(rowIdx, colIdx, e.target.value),
+                style: {
+                  fontSize: fontSize,
+                  color: textColor
+                }
+              })
+            }, colIdx))
+          }, rowIdx))
+        })
       })
     })]
   });
@@ -305,23 +335,25 @@ function save({
     fontSize,
     borderWidth
   } = attributes;
-  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("table", {
-    style: {
-      borderCollapse: 'collapse',
-      backgroundColor: bgColor,
-      fontSize: fontSize,
-      color: textColor
-    },
-    children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("tbody", {
-      children: rows.map((row, rowIdx) => /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("tr", {
-        children: row.map((cell, colIdx) => /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("td", {
-          style: {
-            border: `${borderWidth}px solid ${borderColor}`,
-            padding: '8px'
-          },
-          children: cell
-        }, colIdx))
-      }, rowIdx))
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("div", {
+    ..._wordpress_block_editor__WEBPACK_IMPORTED_MODULE_0__.useBlockProps.save(),
+    children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("table", {
+      style: {
+        backgroundColor: bgColor,
+        fontSize: fontSize,
+        color: textColor
+      },
+      children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("tbody", {
+        children: rows.map((row, rowIdx) => /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("tr", {
+          children: row.map((cell, colIdx) => /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("td", {
+            style: {
+              border: `${borderWidth}px solid ${borderColor}`,
+              width: `${100 / row.length}%`
+            },
+            children: cell
+          }, colIdx))
+        }, rowIdx))
+      })
     })
   });
 }

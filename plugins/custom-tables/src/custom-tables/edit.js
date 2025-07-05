@@ -50,9 +50,26 @@ export default function Edit({ attributes, setAttributes }) {
 
 	// Adds a new column to every row
 	const addColumn = () => {
-		const newRows = rows.map(row => [...row, 'Cell']); // add a string to each row
-		setAttributes({ rows: newRows });
+		if (rows[0]) {
+			const newRows = rows.map(row => [...row, 'Cell']); // add a string to each row
+			setAttributes({ rows: newRows });
+		}
 	};
+
+	// Delete a row
+	const deleteRow = () => {
+		if (rows.length > 1) {
+			setAttributes({ rows: rows.slice(0, -1) }); // removes last row
+		}
+	}
+
+	// Delete a column from every row
+	const deleteColumn = () => {
+		if (rows[0] && rows[0].length > 1) {
+			const updatedRows = rows.map(row => row.slice(0, -1)); // remove last cell from each row
+			setAttributes({ rows: updatedRows })
+		}
+	}
 
 
 	return (
@@ -96,47 +113,54 @@ export default function Edit({ attributes, setAttributes }) {
 					<Button onClick={addColumn} variant="secondary">
 						+ Add Column
 					</Button>
+					<Button onClick={deleteRow} variant="primary" disabled={rows.length <= 1}>
+						- Delete Row
+					</Button>
+					<Button onClick={deleteColumn} variant="secondary" disabled={rows[0]?.length <= 1}>
+						- Delete Column
+					</Button>
 				</PanelBody>
 			</InspectorControls>
 
-			<table
-				style={{
-					borderCollapse: 'collapse',
-					backgroundColor: bgColor,
-					fontSize: fontSize,
-					color: textColor
-				}}
+			<div
+				{...useBlockProps()}
 			>
-				<tbody>
-					{rows.map((row, rowIdx) => (
-						<tr key={rowIdx}>
-							{row.map((cell, colIdx) => (
-								<td
-									key={colIdx}
-									style={{
-										border: `${borderWidth}px solid ${borderColor}`,
-										padding: '8px',
-									}}
-								>
-									{/* Editable cell input */}
-									<input
-										value={cell}
-										placeholder='Cell'
-										onChange={(e) => updateCell(rowIdx, colIdx, e.target.value)}
+				<table
+					style={{
+						backgroundColor: bgColor,
+						fontSize: fontSize,
+						color: textColor
+					}}
+
+				>
+					<tbody>
+						{rows.map((row, rowIdx) => (
+							<tr key={rowIdx}>
+								{row.map((cell, colIdx) => (
+									<td
+										key={colIdx}
 										style={{
-											width: '100%',
-											fontSize: fontSize,
-											color: textColor,
-											border: 'none',
-											background: 'transparent'
+											border: `${borderWidth}px solid ${borderColor}`,
+											width: `${100 / row.length}%`
 										}}
-									/>
-								</td>
-							))}
-						</tr>
-					))}
-				</tbody>
-			</table>
+									>
+										{/* Editable cell input */}
+										<input
+											value={cell}
+											placeholder='Cell'
+											onChange={(e) => updateCell(rowIdx, colIdx, e.target.value)}
+											style={{
+												fontSize: fontSize,
+												color: textColor
+											}}
+										/>
+									</td>
+								))}
+							</tr>
+						))}
+					</tbody>
+				</table>
+			</div>
 		</>
 	)
 }

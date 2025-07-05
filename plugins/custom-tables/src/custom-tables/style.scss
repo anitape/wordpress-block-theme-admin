@@ -6,7 +6,18 @@
  */
 
 .wp-block-create-block-custom-tables {
-	background-color: #21759b;
-	color: #fff;
-	padding: 2px;
+	table {
+		border-collapse: collapse;
+		width: 100%;
+
+		td {
+			padding: 8px;
+		}
+
+		input {
+			width: 100%;
+			border: none;
+			background: transparent;
+		}
+	}
 }
