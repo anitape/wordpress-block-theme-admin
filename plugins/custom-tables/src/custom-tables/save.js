@@ -16,18 +16,34 @@ import { useBlockProps, RichText } from '@wordpress/block-editor';
  * @return {Element} Element to render.
  */
 export default function save({ attributes }) {
-	const { tableContent, borderColor, bgColor, fontSize, borderWidth } = attributes;
+	const { rows, textColor, borderColor, bgColor, fontSize, borderWidth } = attributes;
 
 	return (
-		<div
-			className="custom-table"
+		<table
 			style={{
-				border: `${borderWidth}px solid ${borderColor}`,
+				borderCollapse: 'collapse',
 				backgroundColor: bgColor,
 				fontSize: fontSize,
-				padding: '10px',
+				color: textColor
 			}}
-			dangerouslySetInnerHTML={{ __html: tableContent }}
-		/>
+		>
+			<tbody>
+				{rows.map((row, rowIdx) => (
+					<tr key={rowIdx}>
+						{row.map((cell, colIdx) => (
+							<td
+								key={colIdx}
+								style={{
+									border: `${borderWidth}px solid ${borderColor}`,
+									padding: '8px',
+								}}
+							>
+								{cell}
+							</td>
+						))}
+					</tr>
+				))}
+			</tbody>
+		</table>
 	);
 }

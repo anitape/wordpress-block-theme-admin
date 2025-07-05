@@ -34,9 +34,17 @@ return array(
 		'style' => 'file:./style-index.css',
 		'viewScript' => 'file:./view.js',
 		'attributes' => array(
-			'tableContent' => array(
+			'rows' => array(
+				'type' => 'array',
+				'default' => array(
+					array(
+						'Cell'
+					)
+				)
+			),
+			'textColor' => array(
 				'type' => 'string',
-				'default' => '<table><tr><td>Cell</td></tr></table>'
+				'default' => '#ffffff'
 			),
 			'borderColor' => array(
 				'type' => 'string',

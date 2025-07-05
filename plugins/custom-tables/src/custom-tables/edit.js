@@ -12,7 +12,7 @@ import { __ } from '@wordpress/i18n';
  * @see https://developer.wordpress.org/block-editor/reference-guides/packages/packages-block-editor/#useblockprops
  */
 import { useBlockProps, InspectorControls } from '@wordpress/block-editor';
-import { PanelBody, ColorPicker, RangeControl } from '@wordpress/components';
+import { PanelBody, ColorPicker, RangeControl, Button } from '@wordpress/components';
 /**
  * Lets webpack process CSS, SASS or SCSS files referenced in JavaScript files.
  * Those files can contain any CSS code that gets applied to the editor.
@@ -30,17 +30,40 @@ import './editor.scss';
  * @return {Element} Element to render.
  */
 export default function Edit({ attributes, setAttributes }) {
-	const { tableContent, borderColor, bgColor, fontSize, borderWidth } = attributes;
+	// Destructure the attributes for easier access
+	const { rows, textColor, borderColor, bgColor, fontSize, borderWidth } = attributes;
 
-	const handleInput = (e) => {
-		setAttributes({ tableContent: e.currentTarget.innerHTML });
+	// Updates a specific cell's value
+	const updateCell = (rowIdx, colIdx, value) => {
+		const newRows = [...rows]; // clone the rows
+		newRows[rowIdx][colIdx] = value; // set new value for the specific cell
+		setAttributes({ rows: newRows }); // update the block attribute
+	};
+
+	// Adds a new row with same number of columns as existing rows
+	const addRow = () => {
+		const newRow = rows[0]
+			? new Array(rows[0].length).fill('Cell') // If there are rows already, create a new array with the same length and fill all cells
+			: ['Cell']; // If there’s no rows yet (i.e., the table is completely empty), creates one row with just one column
+		setAttributes({ rows: [...rows, newRow] });
+	};
+
+	// Adds a new column to every row
+	const addColumn = () => {
+		const newRows = rows.map(row => [...row, 'Cell']); // add a string to each row
+		setAttributes({ rows: newRows });
 	};
 
 
 	return (
 		<>
 			<InspectorControls>
-				<PanelBody title="Table Settings">
+				<PanelBody title="Table Style" initialOpen={true}>
+					<p>Text Color</p>
+					<ColorPicker
+						color={textColor}
+						onChangeComplete={(color) => setAttributes({ textColor: color.hex })}
+					/>
 					<p>Border Color</p>
 					<ColorPicker
 						color={borderColor}
@@ -66,21 +89,54 @@ export default function Edit({ attributes, setAttributes }) {
 						max={10}
 					/>
 				</PanelBody>
+				<PanelBody title="Edit Table Layout" initialOpen={false}>
+					<Button onClick={addRow} variant="primary" style={{ marginBottom: '8px' }}>
+						+ Add Row
+					</Button>
+					<Button onClick={addColumn} variant="secondary">
+						+ Add Column
+					</Button>
+				</PanelBody>
 			</InspectorControls>
-			<div
-				className="custom-table-editor"
-				contentEditable
-				suppressContentEditableWarning
+
+			<table
 				style={{
-					border: `${borderWidth}px solid ${borderColor}`,
+					borderCollapse: 'collapse',
 					backgroundColor: bgColor,
 					fontSize: fontSize,
-					padding: '10px',
-					minHeight: '100px',
+					color: textColor
 				}}
-				onInput={handleInput}
-				dangerouslySetInnerHTML={{ __html: tableContent }}
-			/>
+			>
+				<tbody>
+					{rows.map((row, rowIdx) => (
+						<tr key={rowIdx}>
+							{row.map((cell, colIdx) => (
+								<td
+									key={colIdx}
+									style={{
+										border: `${borderWidth}px solid ${borderColor}`,
+										padding: '8px',
+									}}
+								>
+									{/* Editable cell input */}
+									<input
+										value={cell}
+										placeholder='Cell'
+										onChange={(e) => updateCell(rowIdx, colIdx, e.target.value)}
+										style={{
+											width: '100%',
+											fontSize: fontSize,
+											color: textColor,
+											border: 'none',
+											background: 'transparent'
+										}}
+									/>
+								</td>
+							))}
+						</tr>
+					))}
+				</tbody>
+			</table>
 		</>
 	)
 }

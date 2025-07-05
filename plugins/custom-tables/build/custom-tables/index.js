@@ -8,7 +8,7 @@
   \**************************************/
 /***/ ((module) => {
 
-module.exports = /*#__PURE__*/JSON.parse('{"$schema":"https://schemas.wp.org/trunk/block.json","apiVersion":3,"name":"create-block/custom-tables","version":"0.1.0","title":"Custom Tables","category":"design","icon":"table-col-after","description":"A customizable table block with color, size, and border options.","keywords":["table","custom","design"],"example":{},"supports":{"html":true,"color":{},"spacing":{"margin":true,"padding":true}},"textdomain":"custom-tables","editorScript":"file:./index.js","editorStyle":"file:./index.css","style":"file:./style-index.css","viewScript":"file:./view.js","attributes":{"tableContent":{"type":"string","default":"<table><tr><td>Cell</td></tr></table>"},"borderColor":{"type":"string","default":"#ffffff"},"bgColor":{"type":"string","default":"#000000"},"fontSize":{"type":"number","default":16},"borderWidth":{"type":"number","default":1}}}');
+module.exports = /*#__PURE__*/JSON.parse('{"$schema":"https://schemas.wp.org/trunk/block.json","apiVersion":3,"name":"create-block/custom-tables","version":"0.1.0","title":"Custom Tables","category":"design","icon":"table-col-after","description":"A customizable table block with color, size, and border options.","keywords":["table","custom","design"],"example":{},"supports":{"html":true,"color":{},"spacing":{"margin":true,"padding":true}},"textdomain":"custom-tables","editorScript":"file:./index.js","editorStyle":"file:./index.css","style":"file:./style-index.css","viewScript":"file:./view.js","attributes":{"rows":{"type":"array","default":[["Cell"]]},"textColor":{"type":"string","default":"#ffffff"},"borderColor":{"type":"string","default":"#ffffff"},"bgColor":{"type":"string","default":"#000000"},"fontSize":{"type":"number","default":16},"borderWidth":{"type":"number","default":1}}}');
 
 /***/ }),
 
@@ -67,23 +67,54 @@ function Edit({
   attributes,
   setAttributes
 }) {
+  // Destructure the attributes for easier access
   const {
-    tableContent,
+    rows,
+    textColor,
     borderColor,
     bgColor,
     fontSize,
     borderWidth
   } = attributes;
-  const handleInput = e => {
+
+  // Updates a specific cell's value
+  const updateCell = (rowIdx, colIdx, value) => {
+    const newRows = [...rows]; // clone the rows
+    newRows[rowIdx][colIdx] = value; // set new value for the specific cell
     setAttributes({
-      tableContent: e.currentTarget.innerHTML
+      rows: newRows
+    }); // update the block attribute
+  };
+
+  // Adds a new row with same number of columns as existing rows
+  const addRow = () => {
+    const newRow = rows[0] ? new Array(rows[0].length).fill('Cell') // If there are rows already, create a new array with the same length and fill all cells
+    : ['Cell']; // If there’s no rows yet (i.e., the table is completely empty), creates one row with just one column
+    setAttributes({
+      rows: [...rows, newRow]
+    });
+  };
+
+  // Adds a new column to every row
+  const addColumn = () => {
+    const newRows = rows.map(row => [...row, 'Cell']); // add a string to each row
+    setAttributes({
+      rows: newRows
     });
   };
   return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.Fragment, {
-    children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__.InspectorControls, {
-      children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.PanelBody, {
-        title: "Table Settings",
+    children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__.InspectorControls, {
+      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.PanelBody, {
+        title: "Table Style",
+        initialOpen: true,
         children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("p", {
+          children: "Text Color"
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.ColorPicker, {
+          color: textColor,
+          onChangeComplete: color => setAttributes({
+            textColor: color.hex
+          })
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("p", {
           children: "Border Color"
         }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.ColorPicker, {
           color: borderColor,
@@ -114,22 +145,51 @@ function Edit({
           min: 0,
           max: 10
         })]
-      })
-    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("div", {
-      className: "custom-table-editor",
-      contentEditable: true,
-      suppressContentEditableWarning: true,
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.PanelBody, {
+        title: "Edit Table Layout",
+        initialOpen: false,
+        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.Button, {
+          onClick: addRow,
+          variant: "primary",
+          style: {
+            marginBottom: '8px'
+          },
+          children: "+ Add Row"
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.Button, {
+          onClick: addColumn,
+          variant: "secondary",
+          children: "+ Add Column"
+        })]
+      })]
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("table", {
       style: {
-        border: `${borderWidth}px solid ${borderColor}`,
+        borderCollapse: 'collapse',
         backgroundColor: bgColor,
         fontSize: fontSize,
-        padding: '10px',
-        minHeight: '100px'
+        color: textColor
       },
-      onInput: handleInput,
-      dangerouslySetInnerHTML: {
-        __html: tableContent
-      }
+      children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("tbody", {
+        children: rows.map((row, rowIdx) => /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("tr", {
+          children: row.map((cell, colIdx) => /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("td", {
+            style: {
+              border: `${borderWidth}px solid ${borderColor}`,
+              padding: '8px'
+            },
+            children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("input", {
+              value: cell,
+              placeholder: "Cell",
+              onChange: e => updateCell(rowIdx, colIdx, e.target.value),
+              style: {
+                width: '100%',
+                fontSize: fontSize,
+                color: textColor,
+                border: 'none',
+                background: 'transparent'
+              }
+            })
+          }, colIdx))
+        }, rowIdx))
+      })
     })]
   });
 }
@@ -238,23 +298,31 @@ function save({
   attributes
 }) {
   const {
-    tableContent,
+    rows,
+    textColor,
     borderColor,
     bgColor,
     fontSize,
     borderWidth
   } = attributes;
-  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("div", {
-    className: "custom-table",
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("table", {
     style: {
-      border: `${borderWidth}px solid ${borderColor}`,
+      borderCollapse: 'collapse',
       backgroundColor: bgColor,
       fontSize: fontSize,
-      padding: '10px'
+      color: textColor
     },
-    dangerouslySetInnerHTML: {
-      __html: tableContent
-    }
+    children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("tbody", {
+      children: rows.map((row, rowIdx) => /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("tr", {
+        children: row.map((cell, colIdx) => /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("td", {
+          style: {
+            border: `${borderWidth}px solid ${borderColor}`,
+            padding: '8px'
+          },
+          children: cell
+        }, colIdx))
+      }, rowIdx))
+    })
   });
 }
 

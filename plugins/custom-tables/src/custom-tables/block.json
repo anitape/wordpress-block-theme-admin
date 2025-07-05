@@ -27,9 +27,17 @@
 	"style": "file:./style-index.css",
 	"viewScript": "file:./view.js",
 	"attributes": {
-		"tableContent": {
+		"rows": {
+			"type": "array",
+			"default": [
+				[
+					"Cell"
+				]
+			]
+		},
+		"textColor": {
 			"type": "string",
-			"default": "<table><tr><td>Cell</td></tr></table>"
+			"default": "#ffffff"
 		},
 		"borderColor": {
 			"type": "string",
