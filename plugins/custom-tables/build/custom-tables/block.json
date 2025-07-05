@@ -4,16 +4,48 @@
   "name": "create-block/custom-tables",
   "version": "0.1.0",
   "title": "Custom Tables",
-  "category": "widgets",
-  "icon": "smiley",
-  "description": "Example block scaffolded with Create Block tool.",
+  "category": "design",
+  "icon": "table-col-after",
+  "description": "A customizable table block with color, size, and border options.",
+  "keywords": [
+    "table",
+    "custom",
+    "design"
+  ],
   "example": {},
   "supports": {
-    "html": false
+    "html": true,
+    "color": {},
+    "spacing": {
+      "margin": true,
+      "padding": true
+    }
   },
   "textdomain": "custom-tables",
   "editorScript": "file:./index.js",
   "editorStyle": "file:./index.css",
   "style": "file:./style-index.css",
-  "viewScript": "file:./view.js"
+  "viewScript": "file:./view.js",
+  "attributes": {
+    "tableContent": {
+      "type": "string",
+      "default": "<table><tr><td>Cell</td></tr></table>"
+    },
+    "borderColor": {
+      "type": "string",
+      "default": "#ffffff"
+    },
+    "bgColor": {
+      "type": "string",
+      "default": "#000000"
+    },
+    "fontSize": {
+      "type": "number",
+      "default": 16
+    },
+    "borderWidth": {
+      "type": "number",
+      "default": 1
+    }
+  }
 }
