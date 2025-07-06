@@ -4,6 +4,14 @@
  * Replace them with your own styles or remove the file completely.
  */
 
-.wp-block-create-block-custom-tables {
-	border: 1px dotted #f00;
+// .wp-block-create-block-custom-tables {}
+
+.table-panel-buttons {
+	display: grid;
+	grid-template-columns: 1fr 1fr; // two equal columns
+	gap: 8px; // space between buttons
+
+	.table-panel-button {
+		
+	}
 }

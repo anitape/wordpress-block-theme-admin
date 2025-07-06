@@ -12,7 +12,7 @@ import { __ } from '@wordpress/i18n';
  * @see https://developer.wordpress.org/block-editor/reference-guides/packages/packages-block-editor/#useblockprops
  */
 import { useBlockProps, InspectorControls } from '@wordpress/block-editor';
-import { PanelBody, ColorPicker, RangeControl, Button } from '@wordpress/components';
+import { PanelBody, ColorPicker, RangeControl, Button, ButtonGroup } from '@wordpress/components';
 /**
  * Lets webpack process CSS, SASS or SCSS files referenced in JavaScript files.
  * Those files can contain any CSS code that gets applied to the editor.
@@ -106,19 +106,21 @@ export default function Edit({ attributes, setAttributes }) {
 						max={10}
 					/>
 				</PanelBody>
-				<PanelBody title="Edit Table Layout" initialOpen={false}>
-					<Button onClick={addRow} variant="primary" style={{ marginBottom: '8px' }}>
-						+ Add Row
-					</Button>
-					<Button onClick={addColumn} variant="secondary">
-						+ Add Column
-					</Button>
-					<Button onClick={deleteRow} variant="primary" disabled={rows.length <= 1}>
-						- Delete Row
-					</Button>
-					<Button onClick={deleteColumn} variant="secondary" disabled={rows[0]?.length <= 1}>
-						- Delete Column
-					</Button>
+				<PanelBody title="Edit Table Layout" initialOpen={false} >
+					<ButtonGroup className="table-panel-buttons">
+						<Button onClick={addRow} variant="primary" className="table-panel-button">
+							+ Add Row
+						</Button>
+						<Button onClick={addColumn} variant="secondary" className="table-panel-button">
+							+ Add Column
+						</Button>
+						<Button onClick={deleteRow} variant="primary" disabled={rows.length <= 1} className="table-panel-button">
+							- Delete Row
+						</Button>
+						<Button onClick={deleteColumn} variant="secondary" disabled={rows[0]?.length <= 1} className="table-panel-button">
+							- Delete Column
+						</Button>
+					</ButtonGroup>
 				</PanelBody>
 			</InspectorControls>
 
