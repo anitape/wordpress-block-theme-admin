@@ -39,6 +39,10 @@ return array(
 					)
 				)
 			),
+			'hasHeaderRow' => array(
+				'type' => 'boolean',
+				'default' => false
+			),
 			'textColor' => array(
 				'type' => 'string',
 				'default' => '#ffffff'
@@ -58,6 +62,14 @@ return array(
 			'borderWidth' => array(
 				'type' => 'number',
 				'default' => 1
+			),
+			'textAlign' => array(
+				'type' => 'string',
+				'default' => 'left'
+			),
+			'cellPadding' => array(
+				'type' => 'number',
+				'default' => 8
 			)
 		)
 	)

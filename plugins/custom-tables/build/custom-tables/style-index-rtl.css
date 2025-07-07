@@ -14,6 +14,9 @@
 .wp-block-create-block-custom-tables table td {
   padding: 8px;
 }
+.wp-block-create-block-custom-tables table th {
+  padding: 8px;
+}
 .wp-block-create-block-custom-tables table input {
   width: 100%;
   border: none;

@@ -12,7 +12,7 @@ import { __ } from '@wordpress/i18n';
  * @see https://developer.wordpress.org/block-editor/reference-guides/packages/packages-block-editor/#useblockprops
  */
 import { useBlockProps, InspectorControls } from '@wordpress/block-editor';
-import { PanelBody, ColorPicker, RangeControl, Button, ButtonGroup } from '@wordpress/components';
+import { PanelBody, ColorPicker, RangeControl, Button, ButtonGroup, ToggleControl, SelectControl } from '@wordpress/components';
 /**
  * Lets webpack process CSS, SASS or SCSS files referenced in JavaScript files.
  * Those files can contain any CSS code that gets applied to the editor.
@@ -31,7 +31,7 @@ import './editor.scss';
  */
 export default function Edit({ attributes, setAttributes }) {
 	// Destructure the attributes for easier access
-	const { rows, textColor, borderColor, bgColor, fontSize, borderWidth } = attributes;
+	const { rows, hasHeaderRow, textColor, borderColor, bgColor, fontSize, borderWidth, textAlign, cellPadding } = attributes;
 
 	// Updates a specific cell's value
 	const updateCell = (rowIdx, colIdx, value) => {
@@ -107,6 +107,11 @@ export default function Edit({ attributes, setAttributes }) {
 					/>
 				</PanelBody>
 				<PanelBody title="Edit Table Layout" initialOpen={false} >
+					<ToggleControl
+						label="Use Header Row"
+						checked={hasHeaderRow}
+						onChange={(value) => setAttributes({ hasHeaderRow: value })}
+					/>
 					<ButtonGroup className="table-panel-buttons">
 						<Button onClick={addRow} variant="primary" className="table-panel-button">
 							+ Add Row
@@ -121,6 +126,25 @@ export default function Edit({ attributes, setAttributes }) {
 							- Delete Column
 						</Button>
 					</ButtonGroup>
+				</PanelBody>
+				<PanelBody title="Cell Layout" initialOpen={false}>
+					<SelectControl
+						label="Text Align"
+						value={textAlign}
+						options={[
+							{ label: 'Left', value: 'left' },
+							{ label: 'Center', value: 'center' },
+							{ label: 'Right', value: 'right' },
+						]}
+						onChange={(value) => setAttributes({ textAlign: value })}
+					/>
+					<RangeControl
+						label="Cell Padding"
+						value={cellPadding}
+						onChange={(value) => setAttributes({ cellPadding: value })}
+						min={0}
+						max={32}
+					/>
 				</PanelBody>
 			</InspectorControls>
 
@@ -138,26 +162,36 @@ export default function Edit({ attributes, setAttributes }) {
 					<tbody>
 						{rows.map((row, rowIdx) => (
 							<tr key={rowIdx}>
-								{row.map((cell, colIdx) => (
-									<td
-										key={colIdx}
-										style={{
-											border: `${borderWidth}px solid ${borderColor}`,
-											width: `${100 / row.length}%`
-										}}
-									>
-										{/* Editable cell input */}
-										<input
-											value={cell}
-											placeholder='Cell'
-											onChange={(e) => updateCell(rowIdx, colIdx, e.target.value)}
+								{row.map((cell, colIdx) => {
+									const isHeader = hasHeaderRow && rowIdx === 0;
+									const CellTag = isHeader ? 'th' : 'td';
+
+									return (
+										<CellTag
+											key={colIdx}
 											style={{
-												fontSize: fontSize,
-												color: textColor
+												border: `${borderWidth}px solid ${borderColor}`,
+												padding: `${cellPadding}px`,
+												textAlign: textAlign
 											}}
-										/>
-									</td>
-								))}
+										>
+											<input
+												value={cell}
+												placeholder="Cell"
+												onChange={(e) => updateCell(rowIdx, colIdx, e.target.value)}
+												style={{
+													width: '100%',
+													fontSize: fontSize,
+													color: textColor,
+													border: 'none',
+													background: 'transparent',
+													fontWeight: isHeader ? 'bold' : 'normal',
+													textAlign: textAlign
+												}}
+											/>
+										</CellTag>
+									);
+								})}
 							</tr>
 						))}
 					</tbody>

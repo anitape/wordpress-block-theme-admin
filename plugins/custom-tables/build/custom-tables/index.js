@@ -8,7 +8,7 @@
   \**************************************/
 /***/ ((module) => {
 
-module.exports = /*#__PURE__*/JSON.parse('{"$schema":"https://schemas.wp.org/trunk/block.json","apiVersion":3,"name":"create-block/custom-tables","version":"0.1.0","title":"Custom Tables","category":"design","icon":"table-col-after","description":"A customizable table block with color, size, and border options.","keywords":["table","custom","design"],"example":{},"supports":{"html":true,"spacing":{"margin":true,"padding":true}},"textdomain":"custom-tables","editorScript":"file:./index.js","editorStyle":"file:./index.css","style":"file:./style-index.css","viewScript":"file:./view.js","attributes":{"rows":{"type":"array","default":[["Cell"]]},"textColor":{"type":"string","default":"#ffffff"},"borderColor":{"type":"string","default":"#ffffff"},"bgColor":{"type":"string","default":"#12091a"},"fontSize":{"type":"number","default":16},"borderWidth":{"type":"number","default":1}}}');
+module.exports = /*#__PURE__*/JSON.parse('{"$schema":"https://schemas.wp.org/trunk/block.json","apiVersion":3,"name":"create-block/custom-tables","version":"0.1.0","title":"Custom Tables","category":"design","icon":"table-col-after","description":"A customizable table block with color, size, and border options.","keywords":["table","custom","design"],"example":{},"supports":{"html":true,"spacing":{"margin":true,"padding":true}},"textdomain":"custom-tables","editorScript":"file:./index.js","editorStyle":"file:./index.css","style":"file:./style-index.css","viewScript":"file:./view.js","attributes":{"rows":{"type":"array","default":[["Cell"]]},"hasHeaderRow":{"type":"boolean","default":false},"textColor":{"type":"string","default":"#ffffff"},"borderColor":{"type":"string","default":"#ffffff"},"bgColor":{"type":"string","default":"#12091a"},"fontSize":{"type":"number","default":16},"borderWidth":{"type":"number","default":1},"textAlign":{"type":"string","default":"left"},"cellPadding":{"type":"number","default":8}}}');
 
 /***/ }),
 
@@ -70,11 +70,14 @@ function Edit({
   // Destructure the attributes for easier access
   const {
     rows,
+    hasHeaderRow,
     textColor,
     borderColor,
     bgColor,
     fontSize,
-    borderWidth
+    borderWidth,
+    textAlign,
+    cellPadding
   } = attributes;
 
   // Updates a specific cell's value
@@ -166,10 +169,16 @@ function Edit({
           min: 0,
           max: 10
         })]
-      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.PanelBody, {
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.PanelBody, {
         title: "Edit Table Layout",
         initialOpen: false,
-        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.ButtonGroup, {
+        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.ToggleControl, {
+          label: "Use Header Row",
+          checked: hasHeaderRow,
+          onChange: value => setAttributes({
+            hasHeaderRow: value
+          })
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.ButtonGroup, {
           className: "table-panel-buttons",
           children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.Button, {
             onClick: addRow,
@@ -194,7 +203,35 @@ function Edit({
             className: "table-panel-button",
             children: "- Delete Column"
           })]
-        })
+        })]
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.PanelBody, {
+        title: "Cell Layout",
+        initialOpen: false,
+        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.SelectControl, {
+          label: "Text Align",
+          value: textAlign,
+          options: [{
+            label: 'Left',
+            value: 'left'
+          }, {
+            label: 'Center',
+            value: 'center'
+          }, {
+            label: 'Right',
+            value: 'right'
+          }],
+          onChange: value => setAttributes({
+            textAlign: value
+          })
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.RangeControl, {
+          label: "Cell Padding",
+          value: cellPadding,
+          onChange: value => setAttributes({
+            cellPadding: value
+          }),
+          min: 0,
+          max: 32
+        })]
       })]
     }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("div", {
       ...(0,_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__.useBlockProps)(),
@@ -206,21 +243,31 @@ function Edit({
         },
         children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("tbody", {
           children: rows.map((row, rowIdx) => /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("tr", {
-            children: row.map((cell, colIdx) => /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("td", {
-              style: {
-                border: `${borderWidth}px solid ${borderColor}`,
-                width: `${100 / row.length}%`
-              },
-              children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("input", {
-                value: cell,
-                placeholder: "Cell",
-                onChange: e => updateCell(rowIdx, colIdx, e.target.value),
+            children: row.map((cell, colIdx) => {
+              const isHeader = hasHeaderRow && rowIdx === 0;
+              const CellTag = isHeader ? 'th' : 'td';
+              return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(CellTag, {
                 style: {
-                  fontSize: fontSize,
-                  color: textColor
-                }
-              })
-            }, colIdx))
+                  border: `${borderWidth}px solid ${borderColor}`,
+                  padding: `${cellPadding}px`,
+                  textAlign: textAlign
+                },
+                children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("input", {
+                  value: cell,
+                  placeholder: "Cell",
+                  onChange: e => updateCell(rowIdx, colIdx, e.target.value),
+                  style: {
+                    width: '100%',
+                    fontSize: fontSize,
+                    color: textColor,
+                    border: 'none',
+                    background: 'transparent',
+                    fontWeight: isHeader ? 'bold' : 'normal',
+                    textAlign: textAlign
+                  }
+                })
+              }, colIdx);
+            })
           }, rowIdx))
         })
       })
@@ -333,11 +380,14 @@ function save({
 }) {
   const {
     rows,
+    hasHeaderRow,
     textColor,
     borderColor,
     bgColor,
     fontSize,
-    borderWidth
+    borderWidth,
+    textAlign,
+    cellPadding
   } = attributes;
   return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("div", {
     ..._wordpress_block_editor__WEBPACK_IMPORTED_MODULE_0__.useBlockProps.save(),
@@ -349,13 +399,19 @@ function save({
       },
       children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("tbody", {
         children: rows.map((row, rowIdx) => /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("tr", {
-          children: row.map((cell, colIdx) => /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("td", {
-            style: {
-              border: `${borderWidth}px solid ${borderColor}`,
-              width: `${100 / row.length}%`
-            },
-            children: cell
-          }, colIdx))
+          children: row.map((cell, colIdx) => {
+            const isHeader = hasHeaderRow && rowIdx === 0;
+            const CellTag = isHeader ? 'th' : 'td';
+            return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)(CellTag, {
+              style: {
+                border: `${borderWidth}px solid ${borderColor}`,
+                fontWeight: isHeader ? 'bold' : 'normal',
+                padding: `${cellPadding}px`,
+                textAlign: textAlign
+              },
+              children: cell
+            }, colIdx);
+          })
         }, rowIdx))
       })
     })

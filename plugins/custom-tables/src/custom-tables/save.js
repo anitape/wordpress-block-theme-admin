@@ -16,13 +16,13 @@ import { useBlockProps, RichText } from '@wordpress/block-editor';
  * @return {Element} Element to render.
  */
 export default function save({ attributes }) {
-	const { rows, textColor, borderColor, bgColor, fontSize, borderWidth } = attributes;
+	const { rows, hasHeaderRow, textColor, borderColor, bgColor, fontSize, borderWidth, textAlign, cellPadding } = attributes;
 
 	return (
 		<div
 			{...useBlockProps.save()}
 		>
-			<table				
+			<table
 				style={{
 					backgroundColor: bgColor,
 					fontSize: fontSize,
@@ -32,17 +32,24 @@ export default function save({ attributes }) {
 				<tbody>
 					{rows.map((row, rowIdx) => (
 						<tr key={rowIdx}>
-							{row.map((cell, colIdx) => (
-								<td
-									key={colIdx}
-									style={{
-										border: `${borderWidth}px solid ${borderColor}`,
-										width: `${100 / row.length}%`
-									}}
-								>
-									{cell}
-								</td>
-							))}
+							{row.map((cell, colIdx) => {
+								const isHeader = hasHeaderRow && rowIdx === 0;
+								const CellTag = isHeader ? 'th' : 'td';
+
+								return (
+									<CellTag
+										key={colIdx}
+										style={{
+											border: `${borderWidth}px solid ${borderColor}`,
+											fontWeight: isHeader ? 'bold' : 'normal',
+											padding: `${cellPadding}px`,
+											textAlign: textAlign
+										}}
+									>
+										{cell}
+									</CellTag>
+								);
+							})}
 						</tr>
 					))}
 				</tbody>
