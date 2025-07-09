@@ -8,7 +8,7 @@
   \**************************************/
 /***/ ((module) => {
 
-module.exports = /*#__PURE__*/JSON.parse('{"$schema":"https://schemas.wp.org/trunk/block.json","apiVersion":3,"name":"create-block/custom-tables","version":"0.1.0","title":"Custom Tables","category":"design","icon":"table-col-after","description":"A customizable table block with color, size, and border options.","keywords":["table","custom","design"],"example":{},"supports":{"html":true,"spacing":{"margin":true,"padding":true}},"textdomain":"custom-tables","editorScript":"file:./index.js","editorStyle":"file:./index.css","style":"file:./style-index.css","viewScript":"file:./view.js","attributes":{"rows":{"type":"array","default":[["Cell"]]},"hasHeaderRow":{"type":"boolean","default":false},"textColor":{"type":"string","default":"#ffffff"},"borderColor":{"type":"string","default":"#ffffff"},"bgColor":{"type":"string","default":"#12091a"},"fontSize":{"type":"number","default":16},"borderWidth":{"type":"number","default":1},"textAlign":{"type":"string","default":"left"},"cellPadding":{"type":"number","default":8}}}');
+module.exports = /*#__PURE__*/JSON.parse('{"$schema":"https://schemas.wp.org/trunk/block.json","apiVersion":3,"name":"create-block/custom-tables","version":"0.1.0","title":"Custom Tables","category":"design","icon":"table-col-after","description":"A customizable table block with color, size, and border options.","keywords":["table","custom","design"],"example":{},"supports":{"html":true,"spacing":{"margin":true,"padding":true},"typography":{"fontSize":true}},"textdomain":"custom-tables","editorScript":"file:./index.js","editorStyle":"file:./index.css","style":"file:./style-index.css","viewScript":"file:./view.js","attributes":{"rows":{"type":"array","default":[["Cell"]]},"hasHeaderRow":{"type":"boolean","default":false},"textColor":{"type":"string","default":"#ffffff"},"borderColor":{"type":"string","default":"#ffffff"},"bgColor":{"type":"string","default":"#12091a"},"borderWidth":{"type":"number","default":1},"textAlign":{"type":"string","default":"left"},"headerRowColor":{"type":"string","default":"#27212f"},"cellPaddingValue":{"type":"number","default":0.5},"cellPaddingUnit":{"type":"string","default":"rem"}}}');
 
 /***/ }),
 
@@ -74,11 +74,20 @@ function Edit({
     textColor,
     borderColor,
     bgColor,
-    fontSize,
     borderWidth,
     textAlign,
-    cellPadding
+    headerRowColor,
+    cellPaddingValue,
+    cellPaddingUnit
   } = attributes;
+  const blockProps = (0,_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__.useBlockProps)();
+  const {
+    style: blockStyle,
+    ...otherProps
+  } = blockProps;
+
+  // Cell padding string like "0.5rem"
+  const cellPadding = `${cellPaddingValue}${cellPaddingUnit}`;
 
   // Updates a specific cell's value
   const updateCell = (rowIdx, colIdx, value) => {
@@ -152,14 +161,14 @@ function Edit({
           onChangeComplete: color => setAttributes({
             bgColor: color.hex
           })
-        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.RangeControl, {
-          label: "Font Size",
-          value: fontSize,
-          onChange: value => setAttributes({
-            fontSize: value
-          }),
-          min: 10,
-          max: 40
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("p", {
+          children: "Header Row Background Color"
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.ColorPicker, {
+          label: "Header Row Background",
+          color: headerRowColor,
+          onChangeComplete: color => setAttributes({
+            headerRowColor: color.hex
+          })
         }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.RangeControl, {
           label: "Border Width",
           value: borderWidth,
@@ -224,21 +233,44 @@ function Edit({
             textAlign: value
           })
         }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.RangeControl, {
-          label: "Cell Padding",
-          value: cellPadding,
+          label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)('Cell Padding Value', 'my-plugin'),
+          value: cellPaddingValue,
           onChange: value => setAttributes({
-            cellPadding: value
+            cellPaddingValue: value
           }),
           min: 0,
-          max: 32
+          max: 5,
+          step: 0.1
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.SelectControl, {
+          label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)('Cell Padding Unit', 'my-plugin'),
+          value: cellPaddingUnit,
+          options: [{
+            label: 'px',
+            value: 'px'
+          }, {
+            label: 'em',
+            value: 'em'
+          }, {
+            label: 'rem',
+            value: 'rem'
+          }, {
+            label: 'vw',
+            value: 'vw'
+          }, {
+            label: 'vh',
+            value: 'vh'
+          }],
+          onChange: value => setAttributes({
+            cellPaddingUnit: value
+          })
         })]
       })]
     }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("div", {
-      ...(0,_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__.useBlockProps)(),
+      ...otherProps,
       children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("table", {
         style: {
+          ...blockStyle,
           backgroundColor: bgColor,
-          fontSize: fontSize,
           color: textColor
         },
         children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("tbody", {
@@ -246,19 +278,20 @@ function Edit({
             children: row.map((cell, colIdx) => {
               const isHeader = hasHeaderRow && rowIdx === 0;
               const CellTag = isHeader ? 'th' : 'td';
+              const cellStyle = {
+                border: `${borderWidth}px solid ${borderColor}`,
+                padding: cellPadding,
+                textAlign: textAlign,
+                backgroundColor: isHeader ? headerRowColor : 'transparent'
+              };
               return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(CellTag, {
-                style: {
-                  border: `${borderWidth}px solid ${borderColor}`,
-                  padding: `${cellPadding}px`,
-                  textAlign: textAlign
-                },
+                style: cellStyle,
                 children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("input", {
                   value: cell,
                   placeholder: "Cell",
                   onChange: e => updateCell(rowIdx, colIdx, e.target.value),
                   style: {
                     width: '100%',
-                    fontSize: fontSize,
                     color: textColor,
                     border: 'none',
                     background: 'transparent',
@@ -384,17 +417,24 @@ function save({
     textColor,
     borderColor,
     bgColor,
-    fontSize,
     borderWidth,
     textAlign,
-    cellPadding
+    headerRowColor,
+    cellPaddingValue,
+    cellPaddingUnit
   } = attributes;
+  const blockProps = _wordpress_block_editor__WEBPACK_IMPORTED_MODULE_0__.useBlockProps.save();
+  const {
+    style: blockStyle,
+    ...otherProps
+  } = blockProps;
+  const cellPadding = `${cellPaddingValue}${cellPaddingUnit}`;
   return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("div", {
-    ..._wordpress_block_editor__WEBPACK_IMPORTED_MODULE_0__.useBlockProps.save(),
+    ...otherProps,
     children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("table", {
       style: {
+        ...blockStyle,
         backgroundColor: bgColor,
-        fontSize: fontSize,
         color: textColor
       },
       children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("tbody", {
@@ -402,13 +442,15 @@ function save({
           children: row.map((cell, colIdx) => {
             const isHeader = hasHeaderRow && rowIdx === 0;
             const CellTag = isHeader ? 'th' : 'td';
+            const cellStyle = {
+              border: `${borderWidth}px solid ${borderColor}`,
+              fontWeight: isHeader ? 'bold' : 'normal',
+              padding: cellPadding,
+              textAlign: textAlign,
+              backgroundColor: isHeader ? headerRowColor : 'transparent'
+            };
             return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)(CellTag, {
-              style: {
-                border: `${borderWidth}px solid ${borderColor}`,
-                fontWeight: isHeader ? 'bold' : 'normal',
-                padding: `${cellPadding}px`,
-                textAlign: textAlign
-              },
+              style: cellStyle,
               children: cell
             }, colIdx);
           })

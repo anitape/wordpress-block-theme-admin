@@ -4,7 +4,7 @@
  *
  * @see https://developer.wordpress.org/block-editor/reference-guides/packages/packages-block-editor/#useblockprops
  */
-import { useBlockProps, RichText } from '@wordpress/block-editor';
+import { useBlockProps } from '@wordpress/block-editor';
 
 /**
  * The save function defines the way in which the different attributes should
@@ -16,16 +16,21 @@ import { useBlockProps, RichText } from '@wordpress/block-editor';
  * @return {Element} Element to render.
  */
 export default function save({ attributes }) {
-	const { rows, hasHeaderRow, textColor, borderColor, bgColor, fontSize, borderWidth, textAlign, cellPadding } = attributes;
+	const { rows, hasHeaderRow, textColor, borderColor, bgColor, borderWidth, textAlign, headerRowColor, cellPaddingValue, cellPaddingUnit } = attributes;
+
+	const blockProps = useBlockProps.save();
+	const { style: blockStyle, ...otherProps } = blockProps;
+
+	const cellPadding = `${cellPaddingValue}${cellPaddingUnit}`;
 
 	return (
 		<div
-			{...useBlockProps.save()}
+			{...otherProps}
 		>
 			<table
 				style={{
+					...blockStyle,
 					backgroundColor: bgColor,
-					fontSize: fontSize,
 					color: textColor
 				}}
 			>
@@ -35,16 +40,18 @@ export default function save({ attributes }) {
 							{row.map((cell, colIdx) => {
 								const isHeader = hasHeaderRow && rowIdx === 0;
 								const CellTag = isHeader ? 'th' : 'td';
+								const cellStyle = {
+										border: `${borderWidth}px solid ${borderColor}`,
+										fontWeight: isHeader ? 'bold' : 'normal',
+										padding: cellPadding,
+										textAlign: textAlign,
+										backgroundColor: isHeader ? headerRowColor : 'transparent',
+									};
 
 								return (
 									<CellTag
 										key={colIdx}
-										style={{
-											border: `${borderWidth}px solid ${borderColor}`,
-											fontWeight: isHeader ? 'bold' : 'normal',
-											padding: `${cellPadding}px`,
-											textAlign: textAlign
-										}}
+										style={cellStyle}
 									>
 										{cell}
 									</CellTag>

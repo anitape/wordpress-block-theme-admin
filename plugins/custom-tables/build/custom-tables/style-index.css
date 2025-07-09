@@ -11,11 +11,12 @@
   border-collapse: collapse;
   width: 100%;
 }
-.wp-block-create-block-custom-tables table td {
-  padding: 8px;
-}
+.wp-block-create-block-custom-tables table td,
 .wp-block-create-block-custom-tables table th {
   padding: 8px;
+  white-space: normal;
+  word-wrap: break-word;
+  word-break: break-word;
 }
 .wp-block-create-block-custom-tables table input {
   width: 100%;

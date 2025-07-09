@@ -31,7 +31,13 @@ import './editor.scss';
  */
 export default function Edit({ attributes, setAttributes }) {
 	// Destructure the attributes for easier access
-	const { rows, hasHeaderRow, textColor, borderColor, bgColor, fontSize, borderWidth, textAlign, cellPadding } = attributes;
+	const { rows, hasHeaderRow, textColor, borderColor, bgColor, borderWidth, textAlign, headerRowColor, cellPaddingValue, cellPaddingUnit } = attributes;
+
+	const blockProps = useBlockProps();
+	const { style: blockStyle, ...otherProps } = blockProps;
+
+	// Cell padding string like "0.5rem"
+	const cellPadding = `${cellPaddingValue}${cellPaddingUnit}`;
 
 	// Updates a specific cell's value
 	const updateCell = (rowIdx, colIdx, value) => {
@@ -91,12 +97,11 @@ export default function Edit({ attributes, setAttributes }) {
 						color={bgColor}
 						onChangeComplete={(color) => setAttributes({ bgColor: color.hex })}
 					/>
-					<RangeControl
-						label="Font Size"
-						value={fontSize}
-						onChange={(value) => setAttributes({ fontSize: value })}
-						min={10}
-						max={40}
+					<p>Header Row Background Color</p>
+					<ColorPicker
+						label="Header Row Background"
+						color={headerRowColor}
+						onChangeComplete={(color) => setAttributes({ headerRowColor: color.hex })}
 					/>
 					<RangeControl
 						label="Border Width"
@@ -138,23 +143,39 @@ export default function Edit({ attributes, setAttributes }) {
 						]}
 						onChange={(value) => setAttributes({ textAlign: value })}
 					/>
+					{/* Padding value control */}
 					<RangeControl
-						label="Cell Padding"
-						value={cellPadding}
-						onChange={(value) => setAttributes({ cellPadding: value })}
+						label={__('Cell Padding Value', 'my-plugin')}
+						value={cellPaddingValue}
+						onChange={(value) => setAttributes({ cellPaddingValue: value })}
 						min={0}
-						max={32}
+						max={5}
+						step={0.1}
+					/>
+
+					{/* Padding unit select */}
+					<SelectControl
+						label={__('Cell Padding Unit', 'my-plugin')}
+						value={cellPaddingUnit}
+						options={[
+							{ label: 'px', value: 'px' },
+							{ label: 'em', value: 'em' },
+							{ label: 'rem', value: 'rem' },
+							{ label: 'vw', value: 'vw' },
+							{ label: 'vh', value: 'vh' },
+						]}
+						onChange={(value) => setAttributes({ cellPaddingUnit: value })}
 					/>
 				</PanelBody>
 			</InspectorControls>
 
 			<div
-				{...useBlockProps()}
+				{...otherProps}
 			>
 				<table
 					style={{
+						...blockStyle,
 						backgroundColor: bgColor,
-						fontSize: fontSize,
 						color: textColor
 					}}
 
@@ -165,15 +186,17 @@ export default function Edit({ attributes, setAttributes }) {
 								{row.map((cell, colIdx) => {
 									const isHeader = hasHeaderRow && rowIdx === 0;
 									const CellTag = isHeader ? 'th' : 'td';
+									const cellStyle = {
+										border: `${borderWidth}px solid ${borderColor}`,
+										padding: cellPadding,
+										textAlign: textAlign,
+										backgroundColor: isHeader ? headerRowColor : 'transparent',
+									};
 
 									return (
 										<CellTag
 											key={colIdx}
-											style={{
-												border: `${borderWidth}px solid ${borderColor}`,
-												padding: `${cellPadding}px`,
-												textAlign: textAlign
-											}}
+											style={cellStyle}
 										>
 											<input
 												value={cell}
@@ -181,7 +204,6 @@ export default function Edit({ attributes, setAttributes }) {
 												onChange={(e) => updateCell(rowIdx, colIdx, e.target.value)}
 												style={{
 													width: '100%',
-													fontSize: fontSize,
 													color: textColor,
 													border: 'none',
 													background: 'transparent',

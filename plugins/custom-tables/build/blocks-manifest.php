@@ -23,6 +23,9 @@ return array(
 			'spacing' => array(
 				'margin' => true,
 				'padding' => true
+			),
+			'typography' => array(
+				'fontSize' => true
 			)
 		),
 		'textdomain' => 'custom-tables',
@@ -55,10 +58,6 @@ return array(
 				'type' => 'string',
 				'default' => '#12091a'
 			),
-			'fontSize' => array(
-				'type' => 'number',
-				'default' => 16
-			),
 			'borderWidth' => array(
 				'type' => 'number',
 				'default' => 1
@@ -67,9 +66,17 @@ return array(
 				'type' => 'string',
 				'default' => 'left'
 			),
-			'cellPadding' => array(
+			'headerRowColor' => array(
+				'type' => 'string',
+				'default' => '#27212f'
+			),
+			'cellPaddingValue' => array(
 				'type' => 'number',
-				'default' => 8
+				'default' => 0.5
+			),
+			'cellPaddingUnit' => array(
+				'type' => 'string',
+				'default' => 'rem'
 			)
 		)
 	)

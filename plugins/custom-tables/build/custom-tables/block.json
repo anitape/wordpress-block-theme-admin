@@ -18,6 +18,9 @@
     "spacing": {
       "margin": true,
       "padding": true
+    },
+    "typography": {
+      "fontSize": true
     }
   },
   "textdomain": "custom-tables",
@@ -50,10 +53,6 @@
       "type": "string",
       "default": "#12091a"
     },
-    "fontSize": {
-      "type": "number",
-      "default": 16
-    },
     "borderWidth": {
       "type": "number",
       "default": 1
@@ -62,9 +61,17 @@
       "type": "string",
       "default": "left"
     },
-    "cellPadding": {
+    "headerRowColor": {
+      "type": "string",
+      "default": "#27212f"
+    },
+    "cellPaddingValue": {
       "type": "number",
-      "default": 8
+      "default": 0.5
+    },
+    "cellPaddingUnit": {
+      "type": "string",
+      "default": "rem"
     }
   }
 }

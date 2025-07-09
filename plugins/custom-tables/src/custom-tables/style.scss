@@ -10,12 +10,12 @@
 		border-collapse: collapse;
 		width: 100%;
 
-		td {
-			padding: 8px;
-		}
-
+		td,
 		th {
 			padding: 8px;
+			white-space: normal;
+			word-wrap: break-word;
+			word-break: break-word;
 		}
 
 		input {
