@@ -11,5 +11,5 @@
 
 # Allow the specific theme folder and its content
 !themes/
-!themes/admin-block-theme/
-!themes/admin-block-theme/**/*
+!themes/adminiral-block-theme/
+!themes/adminiral-block-theme/**/*
