@@ -1,5 +1,3 @@
-<img src="/themes/adminiral-block-theme/screenshot.png"/>
-
 # WordPress block theme for an entrepreneur
 
 This project is a **WordPress block theme**, built using Gutenberg blocks to create a modern, flexible, and fully customizable one-page website. The site functions as a digital visit card for an entrepreneur, showcasing services, pricing, and contact information.
@@ -48,3 +46,5 @@ A custom WordPress block was created to manage and display pricing tables with f
 - React.js (for custom block)
 - SCSS/CSS
 - JavaScript (ES6+)
+
+<img src="/themes/adminiral-block-theme/screenshot.png"/>
