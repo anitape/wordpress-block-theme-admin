@@ -1,4 +1,4 @@
-<img src="/themes/adminiral-block-theme/screenshot.jpg"/>
+<img src="/themes/adminiral-block-theme/screenshot.png"/>
 
 # WordPress block theme for an entrepreneur
 
