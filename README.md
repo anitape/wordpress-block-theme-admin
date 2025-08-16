@@ -1,3 +1,5 @@
+<img src="adminiral-website-view.jpg"/>
+
 # WordPress block theme for an entrepreneur
 
 This project is a **WordPress block theme**, built using Gutenberg blocks to create a modern, flexible, and fully customizable one-page website. The site functions as a digital visit card for an entrepreneur, showcasing services, pricing, and contact information.
@@ -54,4 +56,17 @@ A custom WordPress block was created to manage and display pricing tables with f
 - SCSS/CSS
 - JavaScript (ES6+)
 
-<img src="/themes/adminiral-block-theme/screenshot.png"/>
+## Screenshots
+
+### 1. Adiminira.fi Logo
+![Adiminira.fi Logo](adiminira-logo.png)
+*The main logo of the website, showing the brand identity.*
+
+### 2. Custom Table Block in Editor
+![Custom Tables Block Editor](custom-tables-block-editor.png)
+*WordPress editor view of the custom Pricing Table block. The block allows adding/removing rows and columns, toggling header row, and customizing styles such as colors, padding, and borders.*
+
+### 3. Site View
+![Website Frontend View](themes/adminiral-block-theme/screenshot.png)
+*Frontend view of the website displaying the Custom Tables block in action, integrated into the live site layout.*
+
