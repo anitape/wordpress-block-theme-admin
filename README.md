@@ -58,8 +58,8 @@ A custom WordPress block was created to manage and display pricing tables with f
 
 ## Screenshots
 
-### 1. Adiminira.fi Logo
-<img src="adminiral-logo.png" alt="Adminiral Logo" width="50" height="50">
+### 1. Adminiral Logo
+<img src="adminiral-logo.png" alt="Adminiral Logo" width="50" height="50"/>
 *The main logo of the website, showing the brand identity.*
 
 ### 2. Custom Table Block in Editor
