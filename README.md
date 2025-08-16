@@ -47,4 +47,4 @@ A custom WordPress block was created to manage and display pricing tables with f
 - SCSS/CSS
 - JavaScript (ES6+)
 
-<img src="/themes/adminiral-block-theme/screenshot.png"/>
+
