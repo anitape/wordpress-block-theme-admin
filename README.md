@@ -2,6 +2,19 @@
 
 # WordPress block theme for an entrepreneur
 
+## Table of Contents
+1. [Purpose & Goal](#purpose--goal)
+2. [Visual Design](#visual-design)
+3. [Key Features](#key-features)
+4. [Custom Blocks](#custom-blocks)
+    - [Features of the Custom Table Block](#features-of-the-custom-table-block)
+    - [Usage](#usage)
+5. [Technologies Used](#technologies-used)
+6. [Screenshots](#screenshots)
+    - [Adminiral Logo](#1-adminiral-logo)
+    - [Custom Table Block in Editor](#2-custom-table-block-in-editor)
+    - [Site View](#3-site-view)
+
 This project is a **WordPress block theme**, built using Gutenberg blocks to create a modern, flexible, and fully customizable one-page website. The site functions as a digital visit card for an entrepreneur, showcasing services, pricing, and contact information.
 
 The final version of the site is published at: <a href="https://adminiral.fi" target="_blank">https://adminiral.fi</a>
@@ -59,7 +72,7 @@ A custom WordPress block was created to manage and display pricing tables with f
 ## Screenshots
 
 ### 1. Adminiral Logo
-<img src="adminiral-logo.png" alt="Adminiral Logo" width="50" height="50"/>
+<img src="adminiral-logo.png" alt="Adminiral Logo" width="50" height="50"/><br/>
 *The main logo of the website, showing the brand identity.*
 
 ### 2. Custom Table Block in Editor
