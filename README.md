@@ -1,6 +1,6 @@
 # Entrepreneur Visit Card Website
 
-This is a one-page WordPress website designed as a digital visit card for an entrepreneur. The site showcases services, pricing, and contact information, providing a professional online presence.
+This project is a **WordPress block theme**, built using Gutenberg blocks to create a modern, flexible, and fully customizable one-page website. The site functions as a digital visit card for an entrepreneur, showcasing services, pricing, and contact information.
 
 The final version of the site is published at: <a href="https://adminiral.fi" target="_blank">https://adminiral.fi</a>
 
