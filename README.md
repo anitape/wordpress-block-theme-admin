@@ -11,6 +11,13 @@ The website serves as a digital business card with the following objectives:
 - Offer a contact form for inquiries.
 - Provide a responsive and SEO-optimized user experience.
 
+## Visual Design
+The visual design of the website was fully created, including:
+- Logo design.
+- Page templates.
+- Color palette and font selection.
+- Fonts were planned and paired using [Fontjoy](https://fontjoy.com/).
+
 ## Key Features
 - **One-page layout:** All essential information is accessible on a single page.  
 - **Contact form:** Allows potential clients to reach out easily.  
